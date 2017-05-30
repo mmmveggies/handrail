@@ -178,9 +178,4 @@ test(`handrail should fail if safety, badPath or goodPath is not a function`, (t
   t.deepEqual(grab(z), `handrail: Expected goodPath to be a function.`)
 })
 
-// test(`railing / balustrade should allow for adding structured rails for handrail programming`,
-//   (t) => {
-//
-//   }
-// )
 /* eslint-enable fp/no-unused-expression */

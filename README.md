@@ -5,7 +5,7 @@
 
 This utility adds [logical disjunction](https://en.wikipedia.org/wiki/Logical_disjunction) / [railway-oriented programming](https://fsharpforfunandprofit.com/rop) to your functional pipelines.
 
-Largely this utility sits on top of `fantasy-eithers`, which provides the Either functionality rely upon.
+Largely this utility sits on top of `fantasy-eithers`, which provides the Either functionality we rely upon.
 
 See the below example problem in a form that runs in node in [./example.js](./example.js)
 
@@ -208,6 +208,7 @@ As you can see, if you need, you simply need to add `rail` to your pipeline, and
 Wow, `rail` and `handrail` are cool!
 
 **Q**: What happens if I have more than one point of failure?
+
 **A**: Use `multiRail`! (For those of you more well-versed in FP, `multiRail = chain(rail(safety, badPath))`)
 
 (Better example forthcoming here.)
