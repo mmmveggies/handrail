@@ -168,26 +168,42 @@ Now we can safely pass in a bad dataset, and it won't fail, it'll just return a 
 **A**: Use `fold` / `net`! This allows us to take the existing Either value and return it back to a raw value.
 */
 
-import {fold, rail} from './index'
+import {fold, rail, Right} from './index'
 // - or -
 // import {net} from 'handrail'
 
 /**
-By folding / netting a result, we can convert the Either's boxed value to a raw value again.
+By folding / netting an Either, we can pull the boxed value out of the Either.
 
 In many cases, this can just be the identity function `(x) => x`:
+*/
 
-// const value = fold(identity, identity, either)
+const myEither = Right(`my value`)
+const value = fold(R.identity, R.identity, myEither) // my value
 
+/**
+Because `fold` / `net` are curried, however, you can make much more declarative functions, where you express what you want to do with a good / bad value independently of the value itself.
+*/
+
+// I wouldn't recommend alerting, but you _could_ if you wanted.
+const alert = typeof window !== `undefined` ? window.alert : R.identity
+const getEntitiesOrAlert = fold(alert, R.path([`body`, `entities`]))
+
+/**
 However, as the situation warrants, you may well want to hook an Either to a global toast / messaging service or similar:
+*/
 
-// const valueOrToast = fold(addToast, identity)
+const addToast = R.identity
+const valueOrToast = fold(addToast, R.identity)
 
+/**
 Finally, if you want to cleave to the imperative world you may be more familiar with:
+*/
 
 // this is gross, but you could do it
-// const throwOrReturn = fold((x) => { throw x }, identity)
+const throwOrReturn = fold((x) => { throw x }, identity)
 
+/**
 #### Adding your own rail
 
 Perhaps you need to make sure that you're more in control of your pipeline than `handrail` affords. `handrail` is basically some syntactic sugar around this notion:
