@@ -62,7 +62,7 @@ module.exports = {
     },
     publish: {
       description: `the tasks to run at publish-time`,
-      script: `npm run build`
+      script: allNPS(`build`, `regenerate.readme`)
     },
     test: {
       covered: {
@@ -75,6 +75,12 @@ module.exports = {
         script: `npm run test:covered > test-output.log`
       },
       script: allNPS(`lint`, `test.covered`)
+    },
+    regenerate: {
+      readme: {
+        description: `run ljs2 against example.literate.js to get our README.md file regenerated`,
+        script: `ljs2 example.literate.js -o README.md`
+      }
     }
   }
 }
