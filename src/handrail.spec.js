@@ -177,6 +177,14 @@ test(`handrail should fail if safety, badPath or goodPath is not a function`, (t
   t.deepEqual(messenger(y), `handrail: Expected badPath to be function.`)
   const z = handrail(identity, identity, {}, `whatever`)
   t.deepEqual(messenger(z), `handrail: Expected goodPath to be function.`)
+  const a = handrail({}, {}, {}, `whatever`)
+  t.deepEqual(messenger(a), `handrail: Expected safety, badPath, goodPath to be functions.`)
+  const b = handrail(identity, {}, {}, `whatever`)
+  t.deepEqual(messenger(b), `handrail: Expected badPath, goodPath to be functions.`)
+  const c = handrail({}, identity, {}, `whatever`)
+  t.deepEqual(messenger(c), `handrail: Expected safety, goodPath to be functions.`)
+  const d = handrail({}, {}, identity, `whatever`)
+  t.deepEqual(messenger(d), `handrail: Expected safety, badPath to be functions.`)
 })
 
 /* eslint-enable fp/no-unused-expression */
