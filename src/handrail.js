@@ -1,10 +1,15 @@
 import pipe from 'ramda/src/pipe'
 import K from 'ramda/src/always'
 import curry from 'ramda/src/curry'
+import reject from 'ramda/src/reject'
+import identity from 'ramda/src/identity'
 import map from 'ramda/src/map'
 import chain from 'ramda/src/chain'
 
+import {denounceObject} from './assertions'
+
 import {
+  plural,
   isFn,
   GuidedLeft,
   GuidedRight,
@@ -47,15 +52,18 @@ export const multiRail = curry(
 
 const safeWarn = curry(
   function ＸＸＸsafeWarn(safety, badPath, goodPath) {
-    if (!isFn(safety)) {
-      return `handrail: Expected safety to be a function.`
-    }
-    if (!isFn(badPath)) {
-      return `handrail: Expected badPath to be a function.`
-    }
-    if (!isFn(goodPath)) {
-      return `handrail: Expected goodPath to be a function.`
-    }
+    return denounceObject(
+      identity,
+      (errors) => (
+        new Error(`handrail: Expected ${errors.join(`, `)} to be function${plural(errors)}.`)
+      ),
+      reject(isFn),
+      {
+        safety,
+        badPath,
+        goodPath
+      }
+    )
   }
 )
 

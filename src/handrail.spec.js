@@ -171,11 +171,12 @@ test(`handrail should allow for adding simple rails to a given function`, (t) =>
 
 test(`handrail should fail if safety, badPath or goodPath is not a function`, (t) => {
   const x = handrail({}, identity, identity, `whatever`)
-  t.deepEqual(grab(x), `handrail: Expected safety to be a function.`)
+  const messenger = pipe(grab, prop(`message`))
+  t.deepEqual(messenger(x), `handrail: Expected safety to be function.`)
   const y = handrail(identity, {}, identity, `whatever`)
-  t.deepEqual(grab(y), `handrail: Expected badPath to be a function.`)
+  t.deepEqual(messenger(y), `handrail: Expected badPath to be function.`)
   const z = handrail(identity, identity, {}, `whatever`)
-  t.deepEqual(grab(z), `handrail: Expected goodPath to be a function.`)
+  t.deepEqual(messenger(z), `handrail: Expected goodPath to be function.`)
 })
 
 /* eslint-enable fp/no-unused-expression */

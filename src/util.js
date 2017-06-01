@@ -58,3 +58,5 @@ export const GuidedRight = guided(Right)
 export const GuidedLeft = guided(Left)
 
 export const allFunctions = all(isFn)
+
+export const plural = (x) => x.length > 1 ? `s` : ``
