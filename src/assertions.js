@@ -3,6 +3,7 @@ import pipe from 'ramda/src/pipe'
 import identity from 'ramda/src/identity'
 import allPass from 'ramda/src/allPass'
 import prop from 'ramda/src/prop'
+import reject from 'ramda/src/reject'
 import all from 'ramda/src/all'
 import propSatisfies from 'ramda/src/propSatisfies'
 
@@ -30,6 +31,7 @@ const type = curry(
 )
 export const isObject = type(`object`)
 export const isFn = type(`function`)
+export const rejectNonFunctions = reject(isFn)
 // const propIsObject = propSatisfies(isObject)
 export const propIsFn = propSatisfies(isFn)
 export const allFunctions = all(isFn)

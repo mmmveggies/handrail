@@ -1,15 +1,14 @@
 import pipe from 'ramda/src/pipe'
 import K from 'ramda/src/always'
 import curry from 'ramda/src/curry'
-import reject from 'ramda/src/reject'
 import identity from 'ramda/src/identity'
 import map from 'ramda/src/map'
 import chain from 'ramda/src/chain'
 
 import {
-  isFn,
   judgeObject,
-  allFunctions
+  allFunctions,
+  rejectNonFunctions
 } from './assertions'
 
 import {
@@ -26,12 +25,21 @@ const xtrace = curry((l, a, b) => {
 const trace = xtrace(console.log)
 // */
 
+const safeWarn = curry((scope, input) => judgeObject(
+  identity,
+  (errors) => (
+    new Error(`${scope}: Expected ${errors.join(`, `)} to be function${plural(errors)}.`)
+  ),
+  rejectNonFunctions,
+  input
+))
+
 // add safety to your pipes!
 export const rail = curry(
   function ＸＸＸrail(safety, divider, input) {
     // unmetExpectations
     const issues = pipe(
-      reject(isFn),
+      rejectNonFunctions,
       Object.keys
     )({
       safety,
@@ -61,28 +69,12 @@ export const multiRail = curry(
   }
 )
 
-const safeWarn = curry(
-  function ＸＸＸsafeWarn(safety, badPath, goodPath) {
-    return judgeObject(
-      identity,
-      (errors) => (
-        new Error(`handrail: Expected ${errors.join(`, `)} to be function${plural(errors)}.`)
-      ),
-      reject(isFn),
-      {
-        safety,
-        badPath,
-        goodPath
-      }
-    )
-  }
-)
-
 const internalRailSafety = curry(
   function ＸＸＸinternalRailSafety(safety, badPath, goodPath) {
+    // TODO convert this so that we can cache `{safety, badPath, goodPath}` and use it in both
     return rail(
       K(allFunctions([safety, badPath, goodPath])),
-      K(safeWarn(safety, badPath, goodPath))
+      K(safeWarn(`handrail`, {safety, badPath, goodPath}))
     )
   }
 )
@@ -90,8 +82,11 @@ const internalRailSafety = curry(
 export const handrail = curry(
   function ＸＸＸhandrail(safety, badPath, goodPath, input) {
     return pipe(
+      // first prove we have good inputs
       internalRailSafety(safety, badPath, goodPath),
+      // then use the functions to create a rail
       multiRail(safety, badPath),
+      // then modify your data if the rail
       map(goodPath)
     )(input)
   }
