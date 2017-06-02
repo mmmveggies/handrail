@@ -4,14 +4,18 @@ import {
   Right,
   Left,
   GuidedRight,
-  isRight,
-  isLeft,
+  assertions,
   rail,
   handrail,
   fold
 } from './index'
+const {
+  isRight,
+  isLeft
+} = assertions
 
 const grab = fold(identity, identity)
+const messenger = pipe(grab, prop(`message`))
 
 const random = (
   () => {
@@ -131,9 +135,11 @@ test(`rail / baluster should Leftify a bad input`, (t) => {
 
 test(`rail should fail with a Left when safety or divider is not a function`, (t) => {
   const badSafety = rail({}, identity, `whatever`)
-  t.is(grab(badSafety), `rail: Expected safety to be a function.`)
+  t.is(messenger(badSafety), `rail: Expected safety to be function.`)
   const badDivider = rail(identity, {}, `whatever`)
-  t.is(grab(badDivider), `rail: Expected divider to be a function.`)
+  t.is(messenger(badDivider), `rail: Expected divider to be function.`)
+  const dumbInputs = rail({}, {}, `whatever`)
+  t.is(messenger(dumbInputs), `rail: Expected safety, divider to be functions.`)
 })
 
 test(`handrail should allow for adding simple rails to a given function`, (t) => {
@@ -171,7 +177,6 @@ test(`handrail should allow for adding simple rails to a given function`, (t) =>
 
 test(`handrail should fail if safety, badPath or goodPath is not a function`, (t) => {
   const x = handrail({}, identity, identity, `whatever`)
-  const messenger = pipe(grab, prop(`message`))
   t.deepEqual(messenger(x), `handrail: Expected safety to be function.`)
   const y = handrail(identity, {}, identity, `whatever`)
   t.deepEqual(messenger(y), `handrail: Expected badPath to be function.`)

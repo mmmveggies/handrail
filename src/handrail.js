@@ -6,14 +6,16 @@ import identity from 'ramda/src/identity'
 import map from 'ramda/src/map'
 import chain from 'ramda/src/chain'
 
-import {denounceObject} from './assertions'
+import {
+  isFn,
+  judgeObject,
+  allFunctions
+} from './assertions'
 
 import {
   plural,
-  isFn,
   GuidedLeft,
-  GuidedRight,
-  allFunctions
+  GuidedRight
 } from './util'
 
 /*
@@ -27,11 +29,20 @@ const trace = xtrace(console.log)
 // add safety to your pipes!
 export const rail = curry(
   function ＸＸＸrail(safety, divider, input) {
-    if (!isFn(safety)) {
-      return GuidedLeft(`rail: Expected safety to be a function.`)
-    }
-    if (!isFn(divider)) {
-      return GuidedLeft(`rail: Expected divider to be a function.`)
+    // unmetExpectations
+    const issues = pipe(
+      reject(isFn),
+      Object.keys
+    )({
+      safety,
+      divider
+    })
+    if (issues.length > 0) {
+      return GuidedLeft(
+        new Error(
+          `rail: Expected ${issues.join(`, `)} to be function${plural(issues)}.`
+        )
+      )
     }
     return (
       safety(input) ?
@@ -52,7 +63,7 @@ export const multiRail = curry(
 
 const safeWarn = curry(
   function ＸＸＸsafeWarn(safety, badPath, goodPath) {
-    return denounceObject(
+    return judgeObject(
       identity,
       (errors) => (
         new Error(`handrail: Expected ${errors.join(`, `)} to be function${plural(errors)}.`)

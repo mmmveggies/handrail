@@ -4,14 +4,13 @@ import {
   rail as ʹrail,
   handrail as ʹhandrail
 } from './handrail'
+import * as ʹassertions from './assertions'
 
 import {
   Right as ʹRight,
   Left as ʹLeft,
   GuidedRight as ʹGuidedRight,
   GuidedLeft as ʹGuidedLeft,
-  isRight as ʹisRight,
-  isLeft as ʹisLeft,
   fold as ʹfold,
   ap as ʹap,
   bimap as ʹbimap
@@ -24,8 +23,6 @@ export const Right = ʹRight
 export const Left = ʹLeft
 export const GuidedRight = ʹGuidedRight
 export const GuidedLeft = ʹGuidedLeft
-export const isRight = ʹisRight
-export const isLeft = ʹisLeft
 export const chain = ʹchain
 export const map = ʹmap
 export const fold = ʹfold
@@ -36,3 +33,5 @@ export const bimap = ʹbimap
 export const baluster = rail
 export const balustrade = handrail
 export const net = fold
+
+export const assertions = ʹassertions
