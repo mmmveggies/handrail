@@ -1,6 +1,8 @@
 import curry from 'ramda/src/curry'
 import pipe from 'ramda/src/pipe'
+// import filter from 'ramda/src/filter'
 import identity from 'ramda/src/identity'
+import length from 'ramda/src/length'
 import allPass from 'ramda/src/allPass'
 import prop from 'ramda/src/prop'
 import reject from 'ramda/src/reject'
@@ -34,6 +36,12 @@ export const isFn = type(`function`)
 export const rejectNonFunctions = reject(isFn)
 // const propIsObject = propSatisfies(isObject)
 export const propIsFn = propSatisfies(isFn)
+export const allPropsAreFunctions = pipe(
+  reject(isFn),
+  Object.keys,
+  length,
+  (x) => x === 0
+)
 export const allFunctions = all(isFn)
 
 export const isEither = allPass([

@@ -133,11 +133,15 @@ test(`rail / baluster should Leftify a bad input`, (t) => {
   )
 })
 
-test(`rail should fail with a Left when safety or divider is not a function`, (t) => {
+test(`rail should fail with a Left when safety is not a function`, (t) => {
   const badSafety = rail({}, identity, `whatever`)
   t.is(messenger(badSafety), `rail: Expected safety to be function.`)
+})
+test(`rail should fail with a Left when divider is not a function`, (t) => {
   const badDivider = rail(identity, {}, `whatever`)
   t.is(messenger(badDivider), `rail: Expected divider to be function.`)
+})
+test(`rail should fail with a Left when safety and divider are not functions`, (t) => {
   const dumbInputs = rail({}, {}, `whatever`)
   t.is(messenger(dumbInputs), `rail: Expected safety, divider to be functions.`)
 })
@@ -175,19 +179,31 @@ test(`handrail should allow for adding simple rails to a given function`, (t) =>
   t.deepEqual(good, Right(input2))
 })
 
-test(`handrail should fail if safety, badPath or goodPath is not a function`, (t) => {
+test(`handrail should fail if safety is not a function`, (t) => {
   const x = handrail({}, identity, identity, `whatever`)
   t.deepEqual(messenger(x), `handrail: Expected safety to be function.`)
+})
+test(`handrail should fail if badPath is not a function`, (t) => {
   const y = handrail(identity, {}, identity, `whatever`)
   t.deepEqual(messenger(y), `handrail: Expected badPath to be function.`)
+})
+test(`handrail should fail if goodPath is not a function`, (t) => {
   const z = handrail(identity, identity, {}, `whatever`)
   t.deepEqual(messenger(z), `handrail: Expected goodPath to be function.`)
+})
+test(`handrail should fail with multiple assertions when there are multiple failures: 1`, (t) => {
   const a = handrail({}, {}, {}, `whatever`)
   t.deepEqual(messenger(a), `handrail: Expected safety, badPath, goodPath to be functions.`)
+})
+test(`handrail should fail with multiple assertions when there are multiple failures: 2`, (t) => {
   const b = handrail(identity, {}, {}, `whatever`)
   t.deepEqual(messenger(b), `handrail: Expected badPath, goodPath to be functions.`)
+})
+test(`handrail should fail with multiple assertions when there are multiple failures: 3`, (t) => {
   const c = handrail({}, identity, {}, `whatever`)
   t.deepEqual(messenger(c), `handrail: Expected safety, goodPath to be functions.`)
+})
+test(`handrail should fail with multiple assertions when there are multiple failures: 4`, (t) => {
   const d = handrail({}, {}, identity, `whatever`)
   t.deepEqual(messenger(d), `handrail: Expected safety, badPath to be functions.`)
 })

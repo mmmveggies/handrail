@@ -7,7 +7,8 @@ import chain from 'ramda/src/chain'
 
 import {
   judgeObject,
-  allFunctions,
+  // allFunctions,
+  allPropsAreFunctions,
   rejectNonFunctions
 } from './assertions'
 
@@ -16,14 +17,6 @@ import {
   GuidedLeft,
   GuidedRight
 } from './util'
-
-/*
-const xtrace = curry((l, a, b) => {
-  l(a, b) // eslint-disable-line
-  return b
-})
-const trace = xtrace(console.log)
-// */
 
 const safeWarn = curry((scope, input) => judgeObject(
   identity,
@@ -34,17 +27,18 @@ const safeWarn = curry((scope, input) => judgeObject(
   input
 ))
 
+const safeRailInputs = function ＸＸＸsafeRailInputs(inputs) {
+  // unmetExpectations
+  return pipe(
+    rejectNonFunctions,
+    Object.keys
+  )(inputs)
+}
+
 // add safety to your pipes!
 export const rail = curry(
   function ＸＸＸrail(safety, divider, input) {
-    // unmetExpectations
-    const issues = pipe(
-      rejectNonFunctions,
-      Object.keys
-    )({
-      safety,
-      divider
-    })
+    const issues = safeRailInputs({safety, divider})
     if (issues.length > 0) {
       return GuidedLeft(
         new Error(
@@ -69,21 +63,18 @@ export const multiRail = curry(
   }
 )
 
-const internalRailSafety = curry(
-  function ＸＸＸinternalRailSafety(safety, badPath, goodPath) {
-    // TODO convert this so that we can cache `{safety, badPath, goodPath}` and use it in both
-    return rail(
-      K(allFunctions([safety, badPath, goodPath])),
-      K(safeWarn(`handrail`, {safety, badPath, goodPath}))
-    )
-  }
-)
+const internalRailSafety = function ＸＸＸinternalRailSafety(expectations) {
+  return rail(
+    K(allPropsAreFunctions(expectations)),
+    K(safeWarn(`handrail`, expectations))
+  )
+}
 
 export const handrail = curry(
   function ＸＸＸhandrail(safety, badPath, goodPath, input) {
     return pipe(
       // first prove we have good inputs
-      internalRailSafety(safety, badPath, goodPath),
+      internalRailSafety({safety, badPath, goodPath}),
       // then use the functions to create a rail
       multiRail(safety, badPath),
       // then modify your data if the rail
