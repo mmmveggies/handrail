@@ -18,11 +18,13 @@ import {
   GuidedRight
 } from './util'
 
+const yell = curry((scope, errors) => (
+  new Error(`${scope}: Expected ${errors.join(`, `)} to be function${plural(errors)}.`)
+))
+
 const safeWarn = curry((scope, input) => judgeObject(
   identity,
-  (errors) => (
-    new Error(`${scope}: Expected ${errors.join(`, `)} to be function${plural(errors)}.`)
-  ),
+  yell(scope),
   rejectNonFunctions,
   input
 ))
@@ -40,11 +42,7 @@ export const rail = curry(
   function ＸＸＸrail(safety, divider, input) {
     const issues = safeRailInputs({safety, divider})
     if (issues.length > 0) {
-      return GuidedLeft(
-        new Error(
-          `rail: Expected ${issues.join(`, `)} to be function${plural(issues)}.`
-        )
-      )
+      return GuidedLeft(yell(`rail`, issues))
     }
     return (
       safety(input) ?

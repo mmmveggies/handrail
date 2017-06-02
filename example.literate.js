@@ -201,7 +201,7 @@ Finally, if you want to cleave to the imperative world you may be more familiar 
 */
 
 // this is gross, but you could do it
-const throwOrReturn = fold((x) => { throw x }, identity)
+const throwOrReturn = fold((x) => { throw x }, R.identity)
 
 /**
 #### Adding your own rail
