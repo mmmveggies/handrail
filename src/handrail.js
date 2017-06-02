@@ -39,23 +39,23 @@ const safeRailInputs = function ＸＸＸsafeRailInputs(inputs) {
 
 // add safety to your pipes!
 export const rail = curry(
-  function ＸＸＸrail(safety, divider, input) {
-    const issues = safeRailInputs({safety, divider})
+  function ＸＸＸrail(assertion, wrongPath, input) {
+    const issues = safeRailInputs({assertion, wrongPath})
     if (issues.length > 0) {
       return GuidedLeft(yell(`rail`, issues))
     }
     return (
-      safety(input) ?
+      assertion(input) ?
       GuidedRight :
-      pipe(divider, GuidedLeft)
+      pipe(wrongPath, GuidedLeft)
     )(input)
   }
 )
 
 export const multiRail = curry(
-  function ＸＸＸmultiRail(safety, divider, input) {
+  function ＸＸＸmultiRail(assertion, wrongPath, input) {
     return chain(
-      rail(safety, divider),
+      rail(assertion, wrongPath),
       input
     )
   }
@@ -69,14 +69,14 @@ const internalRailSafety = function ＸＸＸinternalRailSafety(expectations) {
 }
 
 export const handrail = curry(
-  function ＸＸＸhandrail(safety, badPath, goodPath, input) {
+  function ＸＸＸhandrail(assertion, wrongPath, rightPath, input) {
     return pipe(
       // first prove we have good inputs
-      internalRailSafety({safety, badPath, goodPath}),
+      internalRailSafety({assertion, wrongPath, rightPath}),
       // then use the functions to create a rail
-      multiRail(safety, badPath),
-      // then modify your data if the rail
-      map(goodPath)
+      multiRail(assertion, wrongPath),
+      // then modify your data if we're on the Right path
+      map(rightPath)
     )(input)
   }
 )
