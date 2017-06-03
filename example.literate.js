@@ -1,3 +1,7 @@
+/* eslint-disable max-len */
+/* eslint-disable no-unused-expression */
+/* eslint-disable no-unused-vars */
+/* eslint-disable no-console */
 /**
 ## handrail
 ### a toolset for adding safety to your functional pipelines
@@ -126,7 +130,6 @@ We can use *handrail* to solve our problems!
 */
 
 // import {handrail} from 'handrail'
-import {handrail} from './index'
 
 const notObject = (o) => typeof o !== `object`
 const safeMakeRelative = R.curry(
@@ -168,7 +171,12 @@ Now we can safely pass in a bad dataset, and it won't fail, it'll just return a 
 **A**: Use `fold` / `net`! This allows us to take the existing Either value and return it back to a raw value.
 */
 
-import {fold, rail, Right} from './index'
+import {
+  Right,
+  fold, // alias 'net'
+  rail, // alias 'baluster'
+  handrail // alias 'balustrade'
+} from './index'
 // - or -
 // import {net} from 'handrail'
 
@@ -230,3 +238,7 @@ Wow, `rail` and `handrail` are cool!
 
 (Better example forthcoming here.)
 */
+/* eslint-enable max-len */
+/* eslint-enable no-unused-expression */
+/* eslint-enable no-unused-vars */
+/* eslint-enable no-console */

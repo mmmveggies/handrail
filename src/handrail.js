@@ -18,15 +18,12 @@ import {
   GuidedRight
 } from './util'
 
+// NB: relative to how daggy defines its toString methods and how the error stack looks,
+// we're using the convention of prefixing ＸＸＸ to the main functions so that they aren't
+// anonymous and scan reasonably well
+
 const yell = curry((scope, errors) => (
   new Error(`${scope}: Expected ${errors.join(`, `)} to be function${plural(errors)}.`)
-))
-
-const safeWarn = curry((scope, input) => judgeObject(
-  identity,
-  yell(scope),
-  rejectNonFunctions,
-  input
 ))
 
 const safeRailInputs = function ＸＸＸsafeRailInputs(inputs) {
@@ -60,6 +57,13 @@ export const multiRail = curry(
     )
   }
 )
+
+const safeWarn = curry((scope, input) => judgeObject(
+  identity,
+  yell(scope),
+  rejectNonFunctions,
+  input
+))
 
 const internalRailSafety = function ＸＸＸinternalRailSafety(expectations) {
   return rail(

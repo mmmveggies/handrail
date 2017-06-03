@@ -1,7 +1,5 @@
 import curry from 'ramda/src/curry'
 import pipe from 'ramda/src/pipe'
-// import filter from 'ramda/src/filter'
-import identity from 'ramda/src/identity'
 import length from 'ramda/src/length'
 import allPass from 'ramda/src/allPass'
 import prop from 'ramda/src/prop'
@@ -16,8 +14,6 @@ export const judgement = curry(
     jury
   )(accused)
 )
-
-export const ego = judgement(identity)
 
 export const judgeObject = curry(
   (deliberation, jury, law, accused) => judgement(

@@ -1,22 +1,20 @@
 const curry = require(`ramda/src/curry`)
 const utils = require(`nps-utils`)
-const SHEBANG = `#!/usr/bin/env node`
-const prepend = curry((toPrepend, file) => `echo "${toPrepend}\n$(cat ${file})" > ${file}`)
+const {version} = require(`./package.json`)
+
+const prepend = curry((toPrepend, file) => `echo "${toPrepend} $(cat ${file})" > ${file}`)
 const append = curry((toAppend, file) => `echo "${toAppend}" >> ${file}`)
 const createWithText = curry((text, file) => `echo "${text}" > ${file}`)
-const chmod = curry((permissions, file) => `chmod ${permissions} ${file}`)
-const makeExecutable = chmod(`755`)
 const {
   concurrent: all,
   series,
-  rimraf: rm
+  mkdirp
 } = utils
 const {
   nps: allNPS
 } = all
 const COSTFILE = `./costs`
-// const DISTRIBUTABLE = `./dist/binoculars.js`
-/* eslint-disable max-len */
+const MINIFIED = `./dist/handrail.min.js`
 module.exports = {
   scripts: {
     build: {
@@ -33,7 +31,10 @@ module.exports = {
     buildWithRollup: {
       description: `generate executable`,
       script: series(
-        `rollup -c config/commonjs.js`
+        `rollup -c config/commonjs.js`,
+        mkdirp(`dist`),
+        `uglifyjs --compress --mangle -o ${MINIFIED} -- ./lib/handrail.js`,
+        prepend(`/* handrail v.${version} */`, MINIFIED)
       )
     },
     cost: {
@@ -65,16 +66,20 @@ module.exports = {
       script: allNPS(`build`, `regenerate.readme`)
     },
     test: {
+      description: `run lint and tests`,
+      script: allNPS(`lint`, `test.covered`),
       covered: {
         description: `run covered tests`,
         script: `nyc ava --verbose src/*.spec.js`
       },
-      description: `run lint and tests`,
       log: {
         description: `run tests and save logfile`,
         script: `npm run test:covered > test-output.log`
       },
-      script: allNPS(`lint`, `test.covered`)
+      readme: {
+        description: `run tests on the example that generates the README`,
+        script: `ava example.literate.js`
+      }
     },
     regenerate: {
       readme: {
@@ -84,4 +89,3 @@ module.exports = {
     }
   }
 }
-/* eslint-enable max-len */
