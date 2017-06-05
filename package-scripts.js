@@ -15,6 +15,7 @@ const {
 } = all
 const COSTFILE = `./costs`
 const MINIFIED = `./dist/handrail.min.js`
+const MINIFIED_BROWSER = `./dist/handrail.browser.min.js`
 module.exports = {
   scripts: {
     build: {
@@ -33,8 +34,11 @@ module.exports = {
       script: series(
         `rollup -c config/commonjs.js`,
         mkdirp(`dist`),
-        `uglifyjs --compress --mangle -o ${MINIFIED} -- ./lib/handrail.js`,
-        prepend(`/* handrail v.${version} */`, MINIFIED)
+        `browserify --node -s handrail ./lib/index.js > ${MINIFIED_BROWSER}`,
+        `uglifyjs --compress --mangle -o ${MINIFIED} -- ./lib/index.js`,
+        `uglifyjs --compress --mangle -o ${MINIFIED_BROWSER} -- ${MINIFIED_BROWSER}`,
+        prepend(`/* handrail v.${version} */`, MINIFIED),
+        prepend(`/* handrail v.${version} */`, MINIFIED_BROWSER)
       )
     },
     cost: {

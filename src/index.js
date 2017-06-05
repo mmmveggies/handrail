@@ -2,7 +2,8 @@ import ʹmap from 'ramda/src/map'
 import ʹchain from 'ramda/src/chain'
 import {
   rail as ʹrail,
-  handrail as ʹhandrail
+  handrail as ʹhandrail,
+  multiRail as ʹmultiRail
 } from './handrail'
 import * as ʹassertions from './assertions'
 
@@ -18,6 +19,7 @@ import {
 
 export const rail = ʹrail
 export const handrail = ʹhandrail
+export const multiRail = ʹmultiRail
 
 export const Right = ʹRight
 export const Left = ʹLeft

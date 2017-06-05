@@ -8,6 +8,8 @@
 
 **This module is very much a work-in-progress!**
 
+Please read the [accompanying post](https://codepen.io/brekk/post/3c7f65946d644e17ef37d30a9ba4cd15/visual-function-composition) for more in depth explanation.
+
 This utility adds [logical disjunction](https://en.wikipedia.org/wiki/Logical_disjunction) / [railway-oriented programming](https://fsharpforfunandprofit.com/rop) to your functional pipelines.
 
 Largely this utility sits on top of `fantasy-eithers`, which provides the Either functionality we rely upon.
