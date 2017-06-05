@@ -63,7 +63,7 @@ module.exports = {
     },
     precommit: {
       description: `the tasks auto-run before commits`,
-      script: allNPS(`dist`, `test`, `cost`)
+      script: allNPS(`dist`, `test`, `cost`, `regenerate.readme`)
     },
     publish: {
       description: `the tasks to run at publish-time`,
